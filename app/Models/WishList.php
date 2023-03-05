@@ -21,9 +21,9 @@ class WishList extends Model
     {
         return $this->belongsTo(User::class,'user_id');
     }
-    public function product()
+    public function seller_product()
     {
-        return $this->belongsTo(Product::class,'product_id');
+        return $this->belongsTo(SellerProduct::class,'product_id','id');
     }
-    
+
 }

@@ -8,6 +8,7 @@ use App\Models\Buyer;
 use App\Models\Seller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Product;
+use App\Models\SellerProduct;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\ProductImg;
@@ -34,20 +35,27 @@ class ProductController extends Controller
     }
     public function productIndexApi()
     {
-        $product = Product::with('brand','seller','category','images')->where('status',1)->get();
+        $product = SellerProduct::with('product','seller','product.category','product.subcategory','product.brand','images')->where('status',1)->get();
         // dd($buyer->toArray());
         return $product;
     }
     public function featuredProductIndexApi()
     {
-        $product = Product::with('brand','seller','category','images')->where('featured',1)->where('status',1)->get();
+        $product = SellerProduct::with('product','seller','product.category','product.subcategory','product.brand','images')->whereHas('product',function($query)
+        {
+            $query->where('featured',1);
+        })->where('status',1)->get();
         // dd($buyer->toArray());
         return $product;
     }
     //category wise prduct
     public function categoryWiseProductIndexApi(Request $request)
     {
-        $product = Product::with('brand','seller','category','images')->where('cat_id',$request->cat_id)->where('status',1)->get();
+        $catId = $request->cat_id;
+        $product = SellerProduct::with('product','seller','product.category','product.subcategory','product.brand','images')->whereHas('product',function($query)use($catId)
+        {
+            $query->where('cat_id',$catId);
+        })->where('status',1)->get();
         return $product;
     }
     //End
@@ -62,7 +70,7 @@ class ProductController extends Controller
     {
         if(auth('buyer_api')->user())
         {
-            $wishList = WishList::with('product','product.images','product.brand','product.category','product.seller')->where('user_id',auth('buyer_api')->user()->id)->where('status',1)->get();
+            $wishList = WishList::with('seller_product','seller_product.product','seller_product.images','seller_product.product.brand','seller_product.product.category','seller_product.seller')->where('user_id',auth('buyer_api')->user()->id)->where('status',1)->get();
             return $wishList;
         }
         else
@@ -74,7 +82,7 @@ class ProductController extends Controller
     {
         if(auth('buyer_api')->user())
         {
-            $wishList = new WishList(); 
+            $wishList = new WishList();
             $wishList->user_id = auth('buyer_api')->user()->id;
             $wishList->product_id = $request->product_id;
             $wishList->save();
@@ -89,7 +97,7 @@ class ProductController extends Controller
     {
         if(auth('buyer_api')->user())
         {
-            $wishList = WishList::find($request->item_id); 
+            $wishList = WishList::find($request->item_id);
             $wishList->delete();
             return response()->json(['message',"Product Delted From Wish List..."]);
         }
@@ -119,7 +127,7 @@ class ProductController extends Controller
             $check = Cart::where('user_id',auth('buyer_api')->user()->id)->where('product_id',$request->product_id);
             if($check->count() == 0)
             {
-                $cart = new Cart(); 
+                $cart = new Cart();
                 $cart->user_id = auth('buyer_api')->user()->id;
                 $cart->product_id = $request->product_id;
                 $cart->quantity = $request->quantity;
@@ -128,13 +136,14 @@ class ProductController extends Controller
             else
             {
                 $check = $check->first();
-                if($request->has('quantity') && $request->quantity == 0 && $request->quantity == NULL)
-                {
-                    $check->quantity = $check->quantity + 1;
-                }
+
                 if($request->has('quantity') && $request->quantity != 0 && $request->quantity != NULL)
                 {
                     $check->quantity = $check->quantity + $request->quantity;
+                }
+                else
+                {
+                    $check->quantity = $check->quantity + 1;
                 }
 
                 $check->save();
@@ -150,7 +159,7 @@ class ProductController extends Controller
     {
         if(auth('buyer_api')->user())
         {
-            $cart = Cart::find($request->cart_id); 
+            $cart = Cart::find($request->cart_id);
             $cart->quantity = $request->quantity;
             $cart->save();
             return response()->json(['message'=>"Product Quantity has been Updated..."]);
@@ -164,7 +173,7 @@ class ProductController extends Controller
     {
         if(auth('buyer_api')->user())
         {
-            $cart = Cart::find($request->cart_id); 
+            $cart = Cart::find($request->cart_id);
             $cart->delete();
             return response()->json(['message'=>"Product has been deleted..."]);
         }
@@ -214,8 +223,8 @@ class ProductController extends Controller
         $cond = Conditions::where('status',1)->get();
         return $cond;
     }
-    
-    
+
+
     // Start Product Region CRUD
     public function regionIndex()
     {
@@ -259,8 +268,8 @@ class ProductController extends Controller
         $region = Region::all();
         return $region;
     }
-    
-        
+
+
     // Start Product Capacity CRUD
     public function capacityIndex()
     {
@@ -304,9 +313,9 @@ class ProductController extends Controller
         $capacity = Capacity::all();
         return $capacity;
     }
-    
-    
-            
+
+
+
     // Start Product Color CRUD
     public function colorIndex()
     {
@@ -350,8 +359,8 @@ class ProductController extends Controller
         $color = Color::all();
         return $color;
     }
-    
-    
+
+
     // Start Stock CRUD
     public function stockIndex()
     {
@@ -395,8 +404,8 @@ class ProductController extends Controller
         $stock = Stock::all();
         return $stock;
     }
-        
-    
+
+
     // Start Currency CRUD
     public function currencyIndex()
     {
