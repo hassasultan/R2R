@@ -1,0 +1,1 @@
+[26-May-2022 09:40:06 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.0.2". You are running 7.4.29. in /home/fyz9h79z2k76/public_html/ready2resale.com/admin_new/vendor/composer/platform_check.php on line 24

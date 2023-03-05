@@ -1,0 +1,123 @@
+body {
+    margin: 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    font-family: 'Poppins', sans-serif;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    padding: 0;
+    margin: 0;
+}
+
+ul,
+li,
+ol {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    outline: 0;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    -webkit-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -ms-transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+a:active,
+a:focus,
+a:hover {
+    outline: 0;
+    text-decoration: none;
+}
+
+button:active,
+button:focus {
+    outline: 0 !important;
+    text-decoration: none;
+}
+
+.btn.focus,
+.btn:focus {
+    box-shadow: none !important;
+    border-color: none !important;
+}
+
+:focus {
+    outline: 0 !important;
+}
+
+.bg-style {
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.fs-24 {
+    font-size: 24px;
+}
+
+.color-black {
+    color: var(--color-black);
+}
+
+.bg-color-black {
+    background-color: var(--color-black);
+}
+
+.color-black-1c1c1c {
+    color: var(--color-black-1c1c1c);
+}
+
+.background-linear-primary {
+    /* background: var(--background-linear-primary); */
+    background-image: linear-gradient(to right, #bd973e 0%, #f9df6a 46.85%, #bc973e 100%);
+}
+
+.height-100vh {
+    height: 100vh;
+}
+
+.height-80vh {
+    height: 80vh;
+}
+
+.px-100 {
+    padding: 0 100px;
+}
+
+.py-100 {
+    padding: 100px 0;
+}
+
+.fs-20 {
+    font-size: 20px;
+}
+
+.color-golden {
+    color: var(--color-golden);
+}
+
+body::-webkit-scrollbar {
+    width: 6px;
+}
+
+body::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgb(23 24 26);
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #f9de6a;
+    /* outline: 1px solid slategrey; */
+}
