@@ -47,7 +47,7 @@ class OrderController extends Controller
                     DB::beginTransaction();
                     $totalPrice = 0;
                     $prefix = "ORDER-";
-                    $OrdNum = IdGenerator::generate(['table' => 'orders','field' => 'order_num', 'length' => 9, 'prefix' =>$prefix]);
+                    $OrdNum = IdGenerator::generate(['table' => 'orders','field' => 'order_num', 'length' => 10, 'prefix' =>$prefix]);
                     foreach($request->seller_product_id as $key => $row)
                     {
                         $product = SellerProduct::find($row);
