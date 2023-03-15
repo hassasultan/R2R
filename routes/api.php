@@ -11,6 +11,7 @@ use App\Http\Controllers\SellerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\SellerProductController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,7 +45,7 @@ Route::prefix('seller')->controller(SellerAuthController::class)->group(function
     // Route::group(function () {
         Route::post('logout', 'logout');
         Route::post('me', 'me');
-       
+
     // });
 });
 Route::prefix('seller')->group(function () {
@@ -72,13 +73,15 @@ Route::prefix('buyer')->group(function () {
     Route::get('add-to/wish-list',[ProductController::class,'addTowishList']);
     Route::get('remove/wish-list',[ProductController::class,'deleteFromwishList']);
     //wishlist ednd
-    
+
     //Cart start
     Route::get('cart-list',[ProductController::class,'cart']);
     Route::post('add-to-cart',[ProductController::class,'addToCart']);
     Route::post('update/cart',[ProductController::class,'updateCart']);
     Route::get('remove/product/cart',[ProductController::class,'deleteProductFromCart']);
     //Cart ednd
+    Route::post('order/store',[OrderController::class,'store']);
+
 });
 
 Route::prefix('buyer')->controller(BuyerAuthController::class)->group(function () {
@@ -89,7 +92,7 @@ Route::prefix('buyer')->controller(BuyerAuthController::class)->group(function (
         Route::post('me', 'me');
     // Route::middleware(['auth', 'user-access:buyer'])->group(function () {
     // });
-    
+
 });
 Route::post('login',[BuyerAuthController::class,'login']);
 
