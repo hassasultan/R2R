@@ -19,7 +19,7 @@ class OrderController extends Controller
         return Validator::make($data, [
             'seller_product_id' => ['required'],
             'quantity' => ['required'],
-            // 'total_price' => ['required', 'numeric'],
+            'price' => ['required'],
             // 'price' => ['required', 'numeric'],
         ]);
     }
@@ -50,8 +50,7 @@ class OrderController extends Controller
                     $OrdNum = IdGenerator::generate(['table' => 'orders','field' => 'order_num', 'length' => 10, 'prefix' =>$prefix]);
                     foreach($request->seller_product_id as $key => $row)
                     {
-                        $product = SellerProduct::find($row);
-                        $totalPrice = $totalPrice + $product->price;
+                        $totalPrice = $totalPrice + $request->price[$key];
                         $totalPrice = $totalPrice * $request->quantity[$key];
                     }
                     $order = new Order();
