@@ -166,8 +166,8 @@ class SellerProductController extends Controller
                 $valid = $this->SellerProductValidator($request->all());
                 if (!$valid->fails())
                 {
-                    try
-                    {
+                    // try
+                    // {
                         $slug  = Str::slug($request->tilte);
                         DB::beginTransaction();
                         $product = new SellerProduct();
@@ -222,11 +222,11 @@ class SellerProductController extends Controller
                         }
                         DB::commit();
                         return response()->json(['message', "Product has been successfully addedd"],200);
-                    }
-                    catch (Exception $ex)
-                    {
-                        return response()->json(['error', $ex->getMessage()]);
-                    }
+                    // }
+                    // catch (Exception $ex)
+                    // {
+                    //     return response()->json(['error', $ex->getMessage()]);
+                    // }
                 }
                 else
                 {
