@@ -216,7 +216,7 @@ class SellerProductController extends Controller
                             {
                                 $proImg =  new ProductImg;
                                 $proImg->seller_product_id = $product->id;
-                                $proImg->images  = $this->productImage($row);
+                                $proImg->image  = $this->productImage($row);
                                 $proImg->save();
                             }
                         }
