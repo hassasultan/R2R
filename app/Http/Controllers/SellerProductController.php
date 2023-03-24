@@ -37,12 +37,12 @@ class SellerProductController extends Controller
         $data['conditions'] = Conditions::all();
         $data['currency'] = Currency::all();
         $data['products'] = Product::with('brand','region','capacity','color','category','subcategory','proCondition')->where('status',1)->get();
-        return $data; 
+        return $data;
     }
     protected function SellerProductValidator(array $data)
     {
         return Validator::make($data, [
-            'tilte' => ['required', 'string','unique:seller_product,title'],
+            'title' => ['required', 'string','unique:seller_product,title'],
             'product_id' => ['required', 'numeric','exists:products,id'],
             'condition_id' => ['required', 'numeric','exists:condition,id'],
             'stock' => ['required', 'numeric'],
@@ -78,7 +78,7 @@ class SellerProductController extends Controller
         ]);
         try
         {
-            $slug  = Str::slug($request->name); 
+            $slug  = Str::slug($request->name);
             DB::beginTransaction();
             $product = new Product;
             $product->slug = $slug;
@@ -91,13 +91,13 @@ class SellerProductController extends Controller
             // $product->stock = $request->stock;
             // $product->price = $request->price;
             $product->featured = $request->featured;
-            
+
             $product->model = $request->model;
             // $product->region = $request->region;
             // $product->color = $request->color;
             // $product->capacity = $request->capacity;
             $product->carrier = $request->carrier;
-            
+
             // if($request->has('description'))
             // {
             //     $product->description = $request->description;
@@ -126,7 +126,7 @@ class SellerProductController extends Controller
             //             'product_id'=>$product->id,
             //         ]);
             //     }
-                
+
             // }
             // if($request->has('capacity'))
             // {
@@ -136,7 +136,7 @@ class SellerProductController extends Controller
             //             'capacity_id'=>$row,
             //             'product_id'=>$product->id,
             //         ]);
-            //     }   
+            //     }
             // }
             if($request->hasFile('image'))
             {
@@ -161,19 +161,19 @@ class SellerProductController extends Controller
     {
         if(auth('seller_api')->check())
         {
-            if (auth('seller_api')->user()) 
+            if (auth('seller_api')->user())
             {
                 $valid = $this->SellerProductValidator($request->all());
-                if (!$valid->fails()) 
+                if (!$valid->fails())
                 {
-                    try 
+                    try
                     {
-                        $slug  = Str::slug($request->tilte); 
+                        $slug  = Str::slug($request->tilte);
                         DB::beginTransaction();
                         $product = new SellerProduct();
                         $product->seller_id = auth('seller_api')->user()->seller->id;
                         $product->product_id = $request->product_id;
-                        $product->title = $request->tilte;
+                        $product->title = $request->title;
                         $product->slug = $slug;
                         $product->condition_id = $request->condition_id;
                         $product->stock = $request->stock;
@@ -210,7 +210,7 @@ class SellerProductController extends Controller
                                 $proCpty->save();
                             }
                         }
-                        if($request->hasFile('image'))
+                        if($request->hasFile('images'))
                         {
                             foreach($request->images as $row)
                             {
@@ -222,13 +222,13 @@ class SellerProductController extends Controller
                         }
                         DB::commit();
                         return response()->json(['message', "Product has been successfully addedd"],200);
-                    } 
-                    catch (Exception $ex) 
+                    }
+                    catch (Exception $ex)
                     {
                         return response()->json(['error', $ex->getMessage()]);
                     }
-                } 
-                else 
+                }
+                else
                 {
                     return response()->json([
                         'status' => false,
@@ -236,8 +236,8 @@ class SellerProductController extends Controller
                         'errors' => $valid->errors()
                     ], 401);
                 }
-            } 
-            else 
+            }
+            else
             {
                 return response()->json([
                     'status' => false,
@@ -245,7 +245,7 @@ class SellerProductController extends Controller
                 ], 401);
             }
         }
-        else 
+        else
         {
             return response()->json([
                 'status' => false,
@@ -257,12 +257,12 @@ class SellerProductController extends Controller
     {
         if(auth('seller_api')->check())
         {
-            if (auth('seller_api')->user()) 
+            if (auth('seller_api')->user())
             {
                 $colors = Color::all();
                 return $colors;
-            } 
-            else 
+            }
+            else
             {
                 return response()->json([
                     'status' => false,
@@ -270,7 +270,7 @@ class SellerProductController extends Controller
                 ], 401);
             }
         }
-        else 
+        else
         {
             return response()->json([
                 'status' => false,
