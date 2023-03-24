@@ -163,77 +163,87 @@ class SellerProductController extends Controller
         {
             if (auth('seller_api')->user())
             {
-                $valid = $this->SellerProductValidator($request->all());
-                if (!$valid->fails())
+                if(auth('seller_api')->user()->seller != null)
                 {
-                    // try
-                    // {
-                        $slug  = Str::slug($request->tilte);
-                        DB::beginTransaction();
-                        $product = new SellerProduct();
-                        $product->seller_id = auth('seller_api')->user()->seller->id;
-                        $product->product_id = $request->product_id;
-                        $product->title = $request->title;
-                        $product->slug = $slug;
-                        $product->condition_id = $request->condition_id;
-                        $product->stock = $request->stock;
-                        $product->price = $request->price;
-                        $product->currency = $request->currency;
-                        $product->save();
-                        if($request->hasFile('color_id'))
+                    $valid = $this->SellerProductValidator($request->all());
+                    if (!$valid->fails())
+                    {
+                        try
                         {
-                            foreach($request->color_id as $row)
+                            $slug  = Str::slug($request->tilte);
+                            DB::beginTransaction();
+                            $product = new SellerProduct();
+                            $product->seller_id = auth('seller_api')->user()->seller->id;
+                            $product->product_id = $request->product_id;
+                            $product->title = $request->title;
+                            $product->slug = $slug;
+                            $product->condition_id = $request->condition_id;
+                            $product->stock = $request->stock;
+                            $product->price = $request->price;
+                            $product->currency = $request->currency;
+                            $product->save();
+                            if($request->hasFile('color_id'))
                             {
-                                $proColor =  new PivotColor;
-                                $proColor->color_id = $row;
-                                $proColor->product_id  = $product->id;
-                                $proColor->save();
+                                foreach($request->color_id as $row)
+                                {
+                                    $proColor =  new PivotColor;
+                                    $proColor->color_id = $row;
+                                    $proColor->product_id  = $product->id;
+                                    $proColor->save();
+                                }
                             }
+                            if($request->hasFile('region_id'))
+                            {
+                                foreach($request->region_id as $row)
+                                {
+                                    $proRgn =  new PivotRegion;
+                                    $proRgn->region_id = $row;
+                                    $proRgn->product_id  = $product->id;
+                                    $proRgn->save();
+                                }
+                            }
+                            if($request->hasFile('capacity_id'))
+                            {
+                                foreach($request->capacity_id as $row)
+                                {
+                                    $proCpty =  new PivotCapacity;
+                                    $proCpty->capacity_id = $row;
+                                    $proCpty->product_id  = $product->id;
+                                    $proCpty->save();
+                                }
+                            }
+                            if($request->hasFile('images'))
+                            {
+                                foreach($request->images as $row)
+                                {
+                                    $proImg =  new ProductImg;
+                                    $proImg->seller_product_id = $product->id;
+                                    $proImg->image  = $this->productImage($row);
+                                    $proImg->save();
+                                }
+                            }
+                            DB::commit();
+                            return response()->json(['message', "Product has been successfully addedd"],200);
                         }
-                        if($request->hasFile('region_id'))
+                        catch (Exception $ex)
                         {
-                            foreach($request->region_id as $row)
-                            {
-                                $proRgn =  new PivotRegion;
-                                $proRgn->region_id = $row;
-                                $proRgn->product_id  = $product->id;
-                                $proRgn->save();
-                            }
+                            return response()->json(['error', $ex->getMessage()]);
                         }
-                        if($request->hasFile('capacity_id'))
-                        {
-                            foreach($request->capacity_id as $row)
-                            {
-                                $proCpty =  new PivotCapacity;
-                                $proCpty->capacity_id = $row;
-                                $proCpty->product_id  = $product->id;
-                                $proCpty->save();
-                            }
-                        }
-                        if($request->hasFile('images'))
-                        {
-                            foreach($request->images as $row)
-                            {
-                                $proImg =  new ProductImg;
-                                $proImg->seller_product_id = $product->id;
-                                $proImg->image  = $this->productImage($row);
-                                $proImg->save();
-                            }
-                        }
-                        DB::commit();
-                        return response()->json(['message', "Product has been successfully addedd"],200);
-                    // }
-                    // catch (Exception $ex)
-                    // {
-                    //     return response()->json(['error', $ex->getMessage()]);
-                    // }
+                    }
+                    else
+                    {
+                        return response()->json([
+                            'status' => false,
+                            'message' => 'validation error',
+                            'errors' => $valid->errors()
+                        ], 401);
+                    }
                 }
                 else
                 {
                     return response()->json([
                         'status' => false,
-                        'message' => 'validation error',
-                        'errors' => $valid->errors()
+                        'message' => 'Please Complete Your Profile first...',
                     ], 401);
                 }
             }
