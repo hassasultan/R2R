@@ -44,7 +44,7 @@ class SellerController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string'],
-            'avatar' => ['required', 'string'],
+            // 'avatar' => ['required', 'string'],
             'address_one' => ['required', 'string'],
             'brand_name' => ['required', 'string'],
             'nie_num' => ['required', 'string'],
