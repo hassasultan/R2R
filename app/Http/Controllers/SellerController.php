@@ -46,6 +46,24 @@ class SellerController extends Controller
             'phone' => ['required', 'string'],
             'avatar' => ['required', 'string'],
             'address_one' => ['required', 'string'],
+            'brand_name' => ['required', 'string'],
+            'nie_num' => ['required', 'string'],
+            'web_url' => ['required', 'string'],
+            'company_name' => ['required', 'string'],
+            'contact_person_name' => ['required', 'string'],
+            'person_designation' => ['required', 'string'],
+            'contact_number' => ['required', 'string'],
+            'contact_email' => ['required', 'string'],
+            'social_media' => ['required', 'string'],
+            'dob' => ['required', 'string'],
+            'source' => ['required', 'string'],
+            'billing_address' => ['required', 'string'],
+            'permanent_address' => ['required', 'string'],
+            'city' => ['required', 'string'],
+            'state' => ['required', 'string'],
+            'postal' => ['required', 'string'],
+            'country' => ['required', 'string'],
+
         ]);
         if(auth('seller_api')->user() && auth('seller_api')->user()->role == "seller")
         {
@@ -74,7 +92,7 @@ class SellerController extends Controller
                     $filenamenew    = date('Y-m-d')."_.".$numb."_.".$extension;
                     $filenamepath   = 'seller'.'/'.'img/'.$filenamenew;
                     $filename       = $img->move(public_path('storage/seller'.'/'.'img'),$filenamenew);
-    
+
                     if(file_exists($user->avatar))
                     {
                         File::delete($user->avatar);
@@ -84,7 +102,7 @@ class SellerController extends Controller
                 $user->save();
                 if(auth('seller_api')->user()->seller != NULL)
                 {
-    
+
                     $seller = Seller::where('user_id',auth('seller_api')->user()->id)->first();
                     if($request->has('brand_name'))
                     {
@@ -230,10 +248,10 @@ class SellerController extends Controller
                         $seller->country = $request->country;
                     }
                     $seller->save();
-    
+
                 }
-            
-            }   
+
+            }
             else
             {
                 return response()->json($valid->errors()->first(),422);
@@ -245,7 +263,7 @@ class SellerController extends Controller
             return response()->json(['message'=>'UnAuthorized']);
         }
     }
-    
+
     public function categoryIndexApi()
     {
         $cat = Category::get();
@@ -283,7 +301,7 @@ class SellerController extends Controller
             ]);
             try
             {
-                $slug  = Str::slug($request->name); 
+                $slug  = Str::slug($request->name);
                 DB::beginTransaction();
                 $cat = new Category();
                 $cat->slug = $slug;
@@ -303,7 +321,7 @@ class SellerController extends Controller
             catch(Exception $ex)
             {
                 return response()->json(['error',$ex]);
-                
+
             }
         }
         else
@@ -314,7 +332,7 @@ class SellerController extends Controller
     }
     public function productStoreApi(Request $request)
     {
-    //   return $request->all(); 
+    //   return $request->all();
         if(auth('seller_api')->check())
         {
             $valid = $this->validate($request,[
@@ -338,7 +356,7 @@ class SellerController extends Controller
             ]);
             try
             {
-                $slug  = Str::slug($request->name.'-'); 
+                $slug  = Str::slug($request->name.'-');
                 DB::beginTransaction();
                 $product = new Product;
                 $product->slug = $slug;
@@ -355,7 +373,7 @@ class SellerController extends Controller
                 $product->color = $request->color;
                 $product->capacity = $request->capacity;
                 $product->carrier = $request->carrier;
-                
+
                 if($request->has('description'))
                 {
                     $product->description = $request->description;
@@ -383,7 +401,7 @@ class SellerController extends Controller
                 // return $ex;
                 return response()->json(['error', $ex]);
             }
-            
+
         }
         else
         {
@@ -391,6 +409,6 @@ class SellerController extends Controller
             return response()->json(['message'=> "UnAuthorized"]);
         }
     }
-    
-    
+
+
 }
