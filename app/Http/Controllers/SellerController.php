@@ -69,7 +69,7 @@ class SellerController extends Controller
         {
             $user = User::find(auth('seller_api')->user()->id);
             // dd($user->toArray());
-            if($valid)
+            if(!$valid->errors())
             {
                 if($request->has('first_name') && $request->has('last_name'))
                 {
