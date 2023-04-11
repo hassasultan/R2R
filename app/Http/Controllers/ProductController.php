@@ -30,7 +30,7 @@ class ProductController extends Controller
 {
     public function singleProduct(Request $request)
     {
-        $product = Product::with('brand','seller','category','images')->find($request->id);
+        $product = SellerProduct::with('product.brand','seller','product.category','product.subcategory','images','getstock','getcurrency')->find($request->id);
         return $product;
     }
     public function productIndexApi()
