@@ -112,7 +112,7 @@ class ProductController extends Controller
     {
         if(auth('buyer_api')->user())
         {
-            $cart = Cart::with('product','product.images','product.brand','product.category','product.seller')->where('user_id',auth('buyer_api')->user()->id)->where('status',1)->get();
+            $cart = Cart::with('product','product.images','product.product.brand','product.product.category','product.seller')->where('user_id',auth('buyer_api')->user()->id)->where('status',1)->get();
             return $cart;
         }
         else
